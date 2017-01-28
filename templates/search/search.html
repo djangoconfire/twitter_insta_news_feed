@@ -1,4 +1,9 @@
 {% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block js_block %}
+	<script type="text/javascript" src="{% static 'js/search.js' %}"></script>
+{% endblock %}
 
 {% block action %}
 	{% url 'search:keyword_search' %}
@@ -22,6 +27,7 @@
 					</div>
 					<div class="col-sm-3">
 						<input type="submit" value="Search" class="btn btn-success">
+						<button id="getcsv" class="btn btn-warning">Download CSV</button>
 					</div>
 			</div>
 		</div>

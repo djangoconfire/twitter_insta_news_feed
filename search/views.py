@@ -9,7 +9,7 @@ ACCESS_TOKEN = 'AAAAAAAAAAAAAAAAAAAAAOJbXgAAAAAAhtiDPbKZDp0KxUkNcuCUhbDmYSQ%3DXz
 
 
 def index(request):
-    return render(request, 'search/search.html')
+    return render(request, 'news_feed.html')
 
 
 def keyword_search(request):
