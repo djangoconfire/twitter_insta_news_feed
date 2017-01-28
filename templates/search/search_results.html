@@ -1,0 +1,35 @@
+{% extends 'search/search.html' %}
+
+
+{% block action %}{% url 'search:index' %}{% endblock %}
+{% block method %}POST{% endblock %}
+
+{% block container %}
+
+	<div class="container">{% csrf_token %}
+		<div class="row">
+			<div class="col-sm-12">
+				<div class="col-sm-12 results">
+
+					<h3 class="well"><span style="color:green">{{search_results|length}}</span> tweets found</h3>
+					{% for status in search_results %}
+						<div class="row">
+							<div class="col-sm-9">
+								<div class="context">
+									<label>@{{ status.user.screen_name }}</label>
+									<p><strong>Bio:</strong> {{ status.user.description }}</p>
+									<p><strong>Tweet:</strong> {{ status.text }}</p>
+								</div>
+							</div>
+							<hr />
+						</div>
+					{% endfor %}
+				</div>
+			</div>
+	</div>
+	</div>
+
+
+
+
+{% endblock %}
