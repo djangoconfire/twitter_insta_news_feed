@@ -3,13 +3,13 @@ from django.http import HttpResponseRedirect, HttpResponse
 from twython import Twython
 # Create your views here.
 
-APP_KEY = 'UWzzBDpA76mQY50HCiOWmTLSm'
-APP_SECRET = 'PPvduM97NnTkDtU8lhxPPgUYObGndugI13OPGeSxauVoE3T3H4'
-ACCESS_TOKEN = 'AAAAAAAAAAAAAAAAAAAAAOJbXgAAAAAAhtiDPbKZDp0KxUkNcuCUhbDmYSQ%3DXz6kXTSB4hyQ7gshVqqKuRZXDz0DyIVr43SiKiu0q5nXrHFml2'
+APP_KEY = 'koamwvRKv34p8GTPi7p7digBQ'
+APP_SECRET = 'nf4RCYCtWZMOeX7dBG69IZsyLawemyNwbR0wICHwiSHDYB1cNG'
+ACCESS_TOKEN = '3702383240-vEKzdJW7P1uZSIHh2ibJ8CTpk2rN9fgvxLTBapS'
 
 
 def index(request):
-    return render(request, 'news_feed.html')
+    return render(request, 'search/search.html')
 
 
 def keyword_search(request):
