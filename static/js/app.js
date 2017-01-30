@@ -2,7 +2,7 @@
     
     var app;
 
-    app = angular.module('pollApp', ['ui.router', 'pollApp.controllers', 'pollApp.services', 'angular-mapbox']);
+    app = angular.module('tweetApp', ['ui.router', 'tweetApp.controllers', 'tweetApp.services', 'angular-mapbox']);
 
     app.run(function(mapboxService) {
         return mapboxService.init({

@@ -3,7 +3,7 @@ from django.conf.urls import patterns, url, include
 from .views import PostList, PostListTweet, PostListInsta, PostListRecent, PostListLocation, HashtagStatsList
 
 
-urlpatterns = patterns('polls.views',
+urlpatterns = patterns('twitter_insta.views',
     url(r'^posts$', PostList.as_view(), name='posts_list'),
     url(r'^posts/recent$', PostListRecent.as_view(), name='posts_list'),
     url(r'^posts/tweets$', PostListTweet.as_view(), name='posts_list'),
