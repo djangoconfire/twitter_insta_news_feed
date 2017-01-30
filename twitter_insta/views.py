@@ -1,9 +1,8 @@
 from rest_framework import generics, permissions, filters
 from rest_framework.response import Response
 from models import Hashtag, Post
-from serializers import PostSerializer, HashtagStatSerializer, MemberStatSerializer
+from serializers import PostSerializer, HashtagStatSerializer
 from django.shortcuts import render
-import django_filters
 
 class PostList(generics.ListAPIView):
     queryset = Post.objects.exclude(content__exact='').order_by('id')
@@ -40,12 +39,6 @@ class PostListLocation(generics.ListAPIView):
         permissions.AllowAny
     ]
 
-class MemberStatsList(generics.ListAPIView):
-    queryset = Verified.objects.all()
-    serializer_class = MemberStatSerializer
-    permission_classes = [
-        permissions.AllowAny
-    ]
 
 class HashtagStatsList(generics.ListAPIView):
     queryset = Hashtag.objects.all()

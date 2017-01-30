@@ -49,7 +49,20 @@ class Post(models.Model):
     content_date            = models.CharField(max_length=200, blank=True, null=True)
     
     def __unicode__(self):
-        return self.user_name  
+        return self.user_name 
+
+
+class Verified(models.Model):
+    display_name        = models.CharField(max_length=200, unique=True)
+    twitter_name        = models.CharField(max_length=200, blank=True, null=True)
+    twitter_id          = models.CharField(max_length=200, blank=True, null=True)
+    instagram_name      = models.CharField(max_length=200, blank=True, null=True)
+    instagram_id        = models.CharField(max_length=200, blank=True, null=True)
+    posts               = models.ManyToManyField(Post)
+    tweet_count         = models.IntegerField(default=0)
+    insta_count         = models.IntegerField(default=0)
+    def __unicode__(self):
+        return self.display_name         
 
 
 class Hashtag(models.Model):

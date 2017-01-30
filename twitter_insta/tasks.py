@@ -1,6 +1,6 @@
 from __future__ import absolute_import
 from celery import shared_task
-from .models import SocialSetting, Hashtag, Post, Verified
+from models import SocialSetting, Hashtag, Post, Verified
 import oauth2 as oauth
 from instagram.client import InstagramAPI
 import json
@@ -120,10 +120,6 @@ def verifiedInstagram(insta):
 def processInstas(instas):
     for insta in reversed(instas):
         user_name = insta.user.username
-        # print insta.caption.text
-        # for property, value in vars(insta.images.get('thumbnail')).iteritems():
-        #     print property, ": ", value
-        # print insta.images.get('thumbnail').url
         check_exist = len(Post.objects.filter(content_id=insta.id))
         if check_exist == 0:
             i = Post(user_name=user_name,content_id=insta.id,source_type='IN')

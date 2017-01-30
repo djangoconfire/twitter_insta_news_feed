@@ -19,4 +19,5 @@ from django.contrib import admin
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     url(r'^',include('search.urls',namespace="search")),
+    url(r'^',include('twitter_insta.urls',namespace="twitter_insta")),
 ]

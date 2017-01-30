@@ -12,15 +12,6 @@ ACCESS_TOKEN = 'AAAAAAAAAAAAAAAAAAAAAOJbXgAAAAAAhtiDPbKZDp0KxUkNcuCUhbDmYSQ%3DXz
 def index(request):
     return render(request, 'search/search.html')
 
-# def searching(request):
-#     if request.method == "GET":
-#         if 'search_term' in request.GET:
-#             query = str(request.GET.get('search_term', ''))
-#             try:
-#                 pass
-
-
-
 def keyword_search(request):
     if request.method == 'GET' and 'q' in request.GET:
         query = request.GET['q']
@@ -65,7 +56,7 @@ def keyword_search(request):
 
             #search_results = twitter.search(q=query, count=100)
             context = {
-                'search_results': search_results,'tweets':b
+                'search_results': search_results
             }
 
             return render(request, 'search/search_results.html', context)
