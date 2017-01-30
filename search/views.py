@@ -56,7 +56,7 @@ def keyword_search(request):
 
             #search_results = twitter.search(q=query, count=100)
             context = {
-                'search_results': search_results
+                'search_results': search_results,'query':query
             }
 
             return render(request, 'search/search_results.html', context)

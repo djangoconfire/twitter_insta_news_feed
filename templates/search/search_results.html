@@ -1,17 +1,32 @@
-{% extends 'search/search.html' %}
+{% extends 'base.html' %}
 
+{% block action %}
+	{% url 'search:keyword_search' %}
 
-{% block action %}{% url 'search:index' %}{% endblock %}
-{% block method %}POST{% endblock %}
+{% endblock %}
+
+{% block method %}GET{% endblock %}
 
 {% block container %}
 
 	<div class="container">{% csrf_token %}
 		<div class="row">
+			<div class="search-form">
+				<div class="col-sm-7">	
+						<input type="text" class="form-control search-bar" name="q" placeholder="Enter any Keyword or Phrases">
+						{% if error %}
+							<h3>{{ error }}</h3>
+						{% endif %}
+
+				</div>
+				<div class="col-sm-3">
+					<input type="submit" value="Search" class="btn btn-success">
+				</div>
+			</div>
 			<div class="col-sm-12">
 				<div class="col-sm-12 results">
 
-					<h3 class="well"><span style="color:green">{{search_results|length}}</span> tweets found</h3>
+					<h3 class="well"><span style="color:green">{{search_results|length}}</span> tweets found about <span style="color:red">{{query}}</span></h3>
 					{% for status in search_results %}
 						<div class="row">
 							<div class="col-sm-9">
