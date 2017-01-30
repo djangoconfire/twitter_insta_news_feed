@@ -62,102 +62,61 @@
     services.factory('Posts', function($log, $http, Post) {
         var posts;
         posts = {
-      all: [],
-      verified: [],
-      unverified: [],
-      tweets: [],
-      instas: [],
-      location: []
+        all: [],
+        verified: [],
+        unverified: [],
+        tweets: [],
+        instas: [],
+        location: []
     };
     return {
       postsReset: function(callback) {
-        posts = {
-          all: [],
-          verified: [],
-          unverified: [],
-          tweets: [],
-          instas: [],
-          location: []
+            posts = {
+            all: [],
+            verified: [],
+            unverified: [],
+            tweets: [],
+            instas: [],
+            location: []
         };
         return callback();
       },
       checkExists: function(post, type) {
-        var old_post, postExists, _i, _len, _ref;
-        postExists = false;
-        _ref = posts[type];
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          old_post = _ref[_i];
-          if (old_post.id === post.id) {
-            postExists = true;
-          }
-        }
-        return postExists;
-      },
-      fromServer: function(data, callback) {
-        return this.postsReset(function() {
-          var new_post, post, _i, _len;
-          for (_i = 0, _len = data.length; _i < _len; _i++) {
-            post = data[_i];
-            new_post = new Post(post);
-            posts['all'].push(new_post);
-            if (new_post.source === 'TW') {
-              posts['tweets'].push(new_post);
+            var old_post, postExists, _i, _len, _ref;
+            postExists = false;
+            _ref = posts[type];
+            for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+                old_post = _ref[_i];
+                if (old_post.id === post.id) {
+                    postExists = true;
+                }
             }
-            if (new_post.source === 'IN') {
-              posts['instas'].push(new_post);
+            return postExists;
+        },
+        fromServer: function(data, callback) {
+            return this.postsReset(function() {
+            var new_post, post, _i, _len;
+            for (_i = 0, _len = data.length; _i < _len; _i++) {
+                post = data[_i];
+                new_post = new Post(post);
+                posts['all'].push(new_post);
+                if (new_post.source === 'TW') {
+                    posts['tweets'].push(new_post);
+                }
+                if (new_post.source === 'IN') {
+                    posts['instas'].push(new_post);
+                }
+                if (new_post.known_user) {
+                    posts['verified'].push(new_post);
+                if (new_post.lat && new_post.lon) {
+                    posts['location'].push(new_post);
+                }
+                } else {
+                    posts['unverified'].push(new_post);
+                }
             }
-            if (new_post.known_user) {
-              posts['verified'].push(new_post);
-              if (new_post.lat && new_post.lon) {
-                posts['location'].push(new_post);
-              }
-            } else {
-              posts['unverified'].push(new_post);
-            }
-          }
-          return callback(posts);
+            return callback(posts);
         });
-      },
-      clearNew: function() {
-        var post, _i, _j, _k, _l, _len, _len1, _len2, _len3, _len4, _len5, _m, _n, _ref, _ref1, _ref2, _ref3, _ref4, _ref5, _results;
-        _ref = posts['all'];
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          post = _ref[_i];
-          post["new"] = false;
-          post.color = "#39cccc";
-        }
-        _ref1 = posts['verified'];
-        for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
-          post = _ref1[_j];
-          post["new"] = false;
-          post.color = "#39cccc";
-        }
-        _ref2 = posts['unverified'];
-        for (_k = 0, _len2 = _ref2.length; _k < _len2; _k++) {
-          post = _ref2[_k];
-          post["new"] = false;
-          post.color = "#39cccc";
-        }
-        _ref3 = posts['tweets'];
-        for (_l = 0, _len3 = _ref3.length; _l < _len3; _l++) {
-          post = _ref3[_l];
-          post["new"] = false;
-          post.color = "#39cccc";
-        }
-        _ref4 = posts['instas'];
-        for (_m = 0, _len4 = _ref4.length; _m < _len4; _m++) {
-          post = _ref4[_m];
-          post["new"] = false;
-          post.color = "#39cccc";
-        }
-        _ref5 = posts['location'];
-        _results = [];
-        for (_n = 0, _len5 = _ref5.length; _n < _len5; _n++) {
-          post = _ref5[_n];
-          post["new"] = false;
-          _results.push(post.color = "#39cccc");
-        }
-        return _results;
       },
       processRecent: function(data, callback) {
         var new_post, post, _i, _len;
@@ -205,7 +164,7 @@
         var _this = this;
         return $http({
           method: 'GET',
-          url: '/polls/posts'
+          url: '/twitter_insta/posts'
         }).success(function(data) {
           $log.info("Succesfully fetched posts.");
           return _this.fromServer(data.reverse(), callback);
@@ -218,7 +177,7 @@
         this.clearNew();
         return $http({
           method: 'GET',
-          url: '/polls/posts/recent'
+          url: '/twitter_insta/posts/recent'
         }).success(function(data) {
           $log.info("Succesfully fetched recent posts.");
           return _this.processRecent(data.reverse(), callback);
@@ -231,7 +190,7 @@
         this.clearNew();
         return $http({
           method: 'GET',
-          url: '/polls/posts/location'
+          url: '/twitter_insta/posts/location'
         }).success(function(data) {
           $log.info("Succesfully fetched location posts.");
           return _this.processLocation(data, callback);
@@ -300,7 +259,7 @@
         var _this = this;
         return $http({
           method: 'GET',
-          url: '/polls/hashtag/stats'
+          url: '/twitter_insta/hashtag/stats'
         }).success(function(data) {
           $log.info("Succesfully fetched hashtags.");
           return _this.fromServer(data, callback);
