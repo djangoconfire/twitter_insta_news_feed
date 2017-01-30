@@ -1,19 +1,27 @@
 from django.shortcuts import render
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseRedirect, HttpResponse,JsonResponse
 from twython import Twython
+import re
 # Create your views here.
 
-APP_KEY = 'koamwvRKv34p8GTPi7p7digBQ'
-APP_SECRET = 'nf4RCYCtWZMOeX7dBG69IZsyLawemyNwbR0wICHwiSHDYB1cNG'
-ACCESS_TOKEN = '3702383240-vEKzdJW7P1uZSIHh2ibJ8CTpk2rN9fgvxLTBapS'
+APP_KEY = 'UWzzBDpA76mQY50HCiOWmTLSm'
+APP_SECRET = 'PPvduM97NnTkDtU8lhxPPgUYObGndugI13OPGeSxauVoE3T3H4'
+ACCESS_TOKEN = 'AAAAAAAAAAAAAAAAAAAAAOJbXgAAAAAAhtiDPbKZDp0KxUkNcuCUhbDmYSQ%3DXz6kXTSB4hyQ7gshVqqKuRZXDz0DyIVr43SiKiu0q5nXrHFml2'
 
 
 def index(request):
     return render(request, 'search/search.html')
 
+# def searching(request):
+#     if request.method == "GET":
+#         if 'search_term' in request.GET:
+#             query = str(request.GET.get('search_term', ''))
+#             try:
+#                 pass
+
+
 
 def keyword_search(request):
-
     if request.method == 'GET' and 'q' in request.GET:
         query = request.GET['q']
         if query is not None and query != '':
@@ -23,7 +31,6 @@ def keyword_search(request):
             search_results = []
             MAX_ATTEMPTS = 100
             TWEETS = 1000
-
 
             for i in range(0,MAX_ATTEMPTS):
 
@@ -39,7 +46,6 @@ def keyword_search(request):
 
                 for result in results['statuses']:
                     search_results.append(result)
-
                 try:
 
                     next_results_url_params = results['search_metadata']['next_results']
@@ -47,10 +53,19 @@ def keyword_search(request):
                 except:
                     break
 
+            b=[]
+            
+            # for tweet in search_results:
+            #     source = tweet.get('_source')
+            #     a={}
+            #     a['lat'] = source.get('location').get('lat')
+            #     a['lon'] = source.get('location').get('lon')
+            #     a['title'] = re.escape(source.get('title')) 
+            #     b.append(a)    
 
             #search_results = twitter.search(q=query, count=100)
             context = {
-                'search_results': search_results,
+                'search_results': search_results,'tweets':b
             }
 
             return render(request, 'search/search_results.html', context)
