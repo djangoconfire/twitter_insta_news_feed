@@ -3,7 +3,7 @@
 {% load staticfiles %}
 
 {% block body %} 
-    ng-app="pollApp" 
+    ng-app="tweetApp" 
 {% endblock %}
 
  {% block header %} Posts {% endblock %} 
@@ -28,8 +28,7 @@
                     <div class="col-xs-12">
                         <mapbox map-id="mattmartz.e71a5e8b" lat="38.9152427" lng="-77.0128203" on-reposition="mapMovedCallback" on-zoom="mapZoomedCallback" zoom="15" scale-to-fit>
                             <marker lat="38.9152427" lng="-77.0128203" color="#000000" size="large">
-                                <h1>Boundary Stone</h1>
-                                <p>@BoundaryStoneDC</p>
+                    
                             </marker>
                             
                             <marker ng-repeat="post in location_posts" lat="[[post.lat]]" lng="[[post.lon]]" color="[[post.color]]">

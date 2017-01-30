@@ -1,7 +1,7 @@
 (function() {
   var services;
 
-  services = angular.module('pollApp.services', []);
+  services = angular.module('tweetApp.services', []);
 
   services.factory('Post', function($log) {
     var Post;
@@ -37,128 +37,31 @@
     return Post;
   });
 
-  services.factory('Hashtag', function($log) {
-    var Hashtag;
-    Hashtag = (function() {
-      function Hashtag(data) {
-        if (data !== null) {
-          this.init(data);
+    services.factory('Hashtag', function($log) {
+        var Hashtag;
+        Hashtag = (function() {
+        function Hashtag(data) {
+            if (data !== null) {
+                this.init(data);
+            }
         }
-      }
 
-      Hashtag.prototype.init = function(data) {
-        this.hashtag = data.hashtag;
-        this.verified = data.verified_count;
-        return this.unverified = data.unverified_count;
-      };
+        Hashtag.prototype.init = function(data) {
+            this.hashtag = data.hashtag;
+            this.verified = data.verified_count;
+            return this.unverified = data.unverified_count;
+        };
 
-      return Hashtag;
+        return Hashtag;
 
     })();
-    return Hashtag;
-  });
+        return Hashtag;
+    });
 
-  services.factory('Member', function($log) {
-    var Member;
-    Member = (function() {
-      function Member(data) {
-        if (data !== null) {
-          this.init(data);
-        }
-      }
 
-      Member.prototype.init = function(data) {
-        this.display_name = data.display_name;
-        this.tweet_count = data.tweet_count;
-        this.insta_count = data.insta_count;
-        this.team = data.team_choice;
-        this.van = data.van_choice;
-        return this.runner = data.runner_number;
-      };
-
-      return Member;
-
-    })();
-    return Member;
-  });
-
-  services.factory('Van', function($log) {
-    var Van;
-    Van = (function() {
-      function Van(data) {
-        if (data !== null) {
-          this.init(data);
-        }
-      }
-
-      Van.prototype.init = function(data) {
-        if (data.van === 'V1') {
-          this.name = 'Van 1';
-        }
-        if (data.van === 'V2') {
-          this.name = 'Van 2';
-        }
-        this.tweet_count = data.tweet_count;
-        this.insta_count = data.insta_count;
-        return this.runners = [data];
-      };
-
-      return Van;
-
-    })();
-    return Van;
-  });
-
-  services.factory('Team', function($log, Van) {
-    var Team;
-    Team = (function() {
-      function Team(data) {
-        if (data !== null) {
-          this.init(data);
-        }
-      }
-
-      Team.prototype.init = function(data) {
-        if (data.team === 'T1') {
-          this.name = 'Team 1';
-        } else if (data.team === 'T2') {
-          this.name = 'Team 2';
-        } else {
-          this.name = 'Boundary Stone Supporters';
-        }
-        this.tweet_count = data.tweet_count;
-        this.insta_count = data.insta_count;
-        if (data.team === 'T1' || data.team === 'T2') {
-          this.vans = [];
-          this.runners = [data];
-          return this.processVan(data);
-        }
-      };
-
-      Team.prototype.processVan = function(data) {
-        var new_van, van_index;
-        van_index = this.vans.map(function(van) {
-          return van.name;
-        }).indexOf(data.van);
-        if (van_index !== -1) {
-          this.vans[van_index]['tweet_count'] += data.tweet_count;
-          this.vans[van_index]['insta_count'] += data.insta_count;
-          return this.vans[van_index]['runners'].push(data);
-        } else {
-          new_van = new Van(data);
-          return this.vans.push(new_van);
-        }
-      };
-
-      return Team;
-
-    })();
-    return Team;
-  });
-
-  services.factory('Posts', function($log, $http, Post) {
-    var posts;
-    posts = {
+    services.factory('Posts', function($log, $http, Post) {
+        var posts;
+        posts = {
       all: [],
       verified: [],
       unverified: [],
@@ -360,66 +263,6 @@
     };
   });
 
-  services.factory('MemberStats', function($log, $http, Member, Team) {
-    var members;
-    members = {
-      all: [],
-      teams: []
-    };
-    return {
-      membersReset: function(callback) {
-        members = {
-          all: [],
-          teams: []
-        };
-        return callback();
-      },
-      fromServer: function(data, callback) {
-        return this.membersReset(function() {
-          var member, new_member, new_team, team_index, _i, _len;
-          for (_i = 0, _len = data.length; _i < _len; _i++) {
-            member = data[_i];
-            new_member = new Member(member);
-            members['all'].push(new_member);
-            team_index = members['teams'].map(function(team) {
-              return team.name;
-            }).indexOf(new_member.team);
-            if (team_index !== -1) {
-              members['teams'][team_index]['tweet_count'] += new_member.tweet_count;
-              members['teams'][team_index]['insta_count'] += new_member.insta_count;
-              members['teams'][team_index].processVan(new_member);
-              members['teams'][team_index]['runners'].push(new_member);
-            } else {
-              new_team = new Team(new_member);
-              members['teams'].push(new_team);
-            }
-          }
-          return callback();
-        });
-      },
-      fetch: function(callback) {
-        var _this = this;
-        return $http({
-          method: 'GET',
-          url: '/polls/member/stats'
-        }).success(function(data) {
-          $log.info("Succesfully fetched members.");
-          return _this.fromServer(data, callback);
-        }).error(function(data) {
-          return $log.info("Failed to fetch members.");
-        });
-      },
-      data: function() {
-        return members;
-      },
-      all: function() {
-        return members.all;
-      },
-      teams: function() {
-        return members.teams;
-      }
-    };
-  });
 
   services.factory('HashtagStats', function($log, $http, Hashtag) {
     var hashtags;
