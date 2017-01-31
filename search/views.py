@@ -33,6 +33,7 @@ def search_tweets(request):
             tweets_list.append(result)
     return JsonResponse(tweets_list,safe=False)
 
+ 
 @csrf_exempt   
 def search_insta(request):
     pass
