@@ -4,22 +4,8 @@ from twython import Twython
 from django.views.decorators.csrf import csrf_exempt
 import re
 import json
-import oauth2 as oauth
 import json, random, sys, inspect
-# Create your views here.
-
-# APP_KEY = 'UWzzBDpA76mQY50HCiOWmTLSm'
-# APP_SECRET = 'PPvduM97NnTkDtU8lhxPPgUYObGndugI13OPGeSxauVoE3T3H4'
-# ACCESS_TOKEN = 'AAAAAAAAAAAAAAAAAAAAAOJbXgAAAAAAhtiDPbKZDp0KxUkNcuCUhbDmYSQ%3DXz6kXTSB4hyQ7gshVqqKuRZXDz0DyIVr43SiKiu0q5nXrHFml2'
-
-
-def get_authenticated_client():
-    consumer_key = "UWzzBDpA76mQY50HCiOWmTLSm"
-    consumer_secret = "PPvduM97NnTkDtU8lhxPPgUYObGndugI13OPGeSxauVoE3T3H4"
-    consumer = oauth.Consumer(key=consumer_key, secret=consumer_secret)
-    request_token_url = "https://api.twitter.com/oauth/request_token"
-    client = oauth.Client(consumer)
-    return client
+from util import *
 
 def index(request):
     return render(request, 'search.html')
