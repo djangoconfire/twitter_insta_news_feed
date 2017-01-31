@@ -1,7 +1,7 @@
-var mapRef
+var google_map
 var markers = []
+var news_feeds = []
 var feeds = []
-var infoWindows = []
 
 $(function(){
 	$('.refresh').hide()
@@ -24,7 +24,7 @@ $(function(){
 	            data:{form_data:form_data},
 	            success: function(data){
 	            	$.each(data, function(i, result){	
-					feeds.push({
+					news_feeds.push({
 					src: 'twitter',
 					feed: result.text,
 					epoch: result.date,
@@ -33,7 +33,7 @@ $(function(){
 					image: result.image
 					})
 
-					$.each(feeds, function(i, result){
+					$.each(news_feeds, function(i, result){
 					var counter = 0	
 	        		if(counter < 20){
 	        			if(result.geo){
@@ -46,24 +46,24 @@ $(function(){
 						    maxWidth: 100
 						})
 						
-						var infowindow = new google.maps.InfoWindow({
+						var feeds = new google.maps.feeds({
 							content: contentString(result.feed)
 						})
 
 						marker.addListener('click', function() {	
-							closeAllInfoWindows()						
-							infowindow.open(mapRef, marker)
+							closeAllfeeds()						
+							feeds.open(google_map, marker)
 						})
 
-						infoWindows.push(infowindow)
+						feeds.push(feeds)
 
 						markers.push(marker)
 	        			}
 	        		}
-	        			$('.feed-container').append(feedPrototype(result))
+	        			$('.feed-container').append(newsfeed(result))
 	        		})
 
-						console.log(feeds)
+						console.log(news_feeds)
 	       				showMarkers()
 						$('#loading-modal').modal('hide')
 	        	})
@@ -73,65 +73,6 @@ $(function(){
 					$('#loading-modal').modal('hide')
 	    			console.log(err)
 	    		}
-	   //  		}).then(function(){
-				// $.ajax({
-				// 	url:'/search/insta/',
-	   //         		type:'post',
-	   //          	data:{form_data:form_data},
-	   //          	success: function(data){
-	   //          	counter = 0
-				// 	$.each(data, function(i, result){
-				// 	feeds.push({
-				// 		src: 'instagram',
-				// 		feed: result.caption,
-				// 		epoch: result.date*1000,
-				// 		geo: result.geo,
-				// 		date: new Date(result.date*1000),
-				// 		image: result.thumbnail_src
-				// 		})
-		  //       	})
-				// 	showMarkers()
-		  //   		},
-		  //   		error: function(err){
-				// 		$('#loading-modal').modal('hide')
-		  //   			console.log(err)
-		   //  		.then(function(){
-					// 	counter = 0
-					// 	feeds.sort(function(a, b) {
-					// 	return parseFloat(b.epoch) - parseFloat(a.epoch);
-					// })
-					// $.each(feeds, function(i, result){
-	    //     		if(counter < 20){
-	    //     			if(result.geo){
-	    //     				counter++;
-	    //     				var latlng = new google.maps.LatLng(result.geo.coordinates[0],result.geo.coordinates[1])
-	        			
-	    //     				var marker = new google.maps.Marker({
-					// 	    position: latlng,
-					// 	    title: "News Feed",
-					// 	    maxWidth: 100
-					// 	})
-						
-					// 	var infowindow = new google.maps.InfoWindow({
-					// 		content: contentString(result.feed)
-					// 	})
-
-					// 	marker.addListener('click', function() {	
-					// 		closeAllInfoWindows()						
-					// 		infowindow.open(mapRef, marker)
-					// 	})
-
-					// 	infoWindows.push(infowindow)
-
-					// 	markers.push(marker)
-	    //     			}
-	    //     		}
-	    //     			$('.feed-container').append(feedPrototype(result))
-	    //     		})
-
-					// 	console.log(feeds)
-	    //    				showMarkers()
-					// 	$('#loading-modal').modal('hide')
 					 })
 				})
 			})
@@ -139,9 +80,9 @@ $(function(){
 	    		
 
 
-function closeAllInfoWindows(){
-	for (var i=0; i < infoWindows.length; i++){
-		infoWindows[i].close()
+function closeAllfeeds(){
+	for (var i=0; i < feeds.length; i++){
+		feeds[i].close()
 	}
 }
 
@@ -161,7 +102,7 @@ function clearMarkers() {
 }
 
 function showMarkers() {
-	setMapOnAll(mapRef)
+	setMapOnAll(google_map)
 }
 
 function deleteMarkers() {
@@ -175,17 +116,16 @@ function initMap() {
 		zoom: 1,
 		center: center
 	})
-	mapRef = map
+	google_map = map
 }
 
 
 
-function feedPrototype(feed){
+function newsfeed(feed){
 	res = '<div class="col-sm-10 col-sm-offset-1 feed">'
 		+ '<blockquote class="blockquote ' + feed.src + '-blockqoute">'
 		+ '<div class="row">'
 		+ '<div class="col-sm-12 date">'
-		+ feed.date
 		+  '</div>'
 	if(feed.image != undefined){
 		res += '<div class="col-sm-12 text-center">'
@@ -196,7 +136,7 @@ function feedPrototype(feed){
 		+ feed.feed
 		+ '</div>'
 		+ '<div class="col-sm-12 text-right source text-capitalize ' + feed.src + '">'
-		+ 'From ' + feed.src
+		+ feed.src
 		+ '</div>'
 		+ '</div>'
 		+ '</blockquote>'

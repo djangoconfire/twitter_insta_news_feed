@@ -1,9 +1,7 @@
 .navbar{
-  background: #343d46;
+  background: #ffffff;
 }
-body{
-  background: #343d46;
-}
+
 
 .search-container{
   width: 300px;
@@ -16,12 +14,12 @@ body{
   height: 50px;
   border: none;
   font-size: 16pt;
-  color: #262626;
+  color: #ffffff;
   padding-left: 45px;
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
   border-radius: 5px;
-  
+  background: #343d46;
   -webkit-transition: all .55s ease;
   -moz-transition: all .55s ease;
   -ms-transition: all .55s ease;
@@ -55,7 +53,7 @@ body{
 .search-container .heading_tag{
     text-align:center;
     font-size:40px;
-    color:#f1c40f;
+    color:#0084b4;
     margin-top:60px;
 
 }
@@ -63,7 +61,7 @@ body{
 .search-container .heading_ed{
     text-align:center;
     font-size:40px;
-    color:#e74c3c;
+    color:#cd486b;
     margin-top:20px;
 
 }
