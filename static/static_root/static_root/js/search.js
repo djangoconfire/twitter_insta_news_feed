@@ -32,41 +32,9 @@ $(function(){
 					date: new Date(result.date),
 					image: result.image
 					})
-					console.log(feeds.feed)
-	        	})
-	        	},
-	    		error: function(err){
-					$('#loading-modal').modal('hide')
-	    			console.log(err)
-	    		}
-	    		}).then(function(){
-				$.ajax({
-					url:'/search/insta/',
-	           		type:'post',
-	            	data:{form_data:form_data},
-	            	success: function(data){
-	            	counter = 0
-					$.each(data, function(i, result){
-					feeds.push({
-						src: 'instagram',
-						feed: result.caption,
-						epoch: result.date*1000,
-						geo: result.geo,
-						date: new Date(result.date*1000),
-						image: result.thumbnail_src
-						})
-		        	})
-					showMarkers()
-		    		},
-		    		error: function(err){
-						$('#loading-modal').modal('hide')
-		    			console.log(err)
-		    		}.then(function(){
-						counter = 0
-						feeds.sort(function(a, b) {
-						return parseFloat(b.epoch) - parseFloat(a.epoch);
-					})
+
 					$.each(feeds, function(i, result){
+					var counter = 0	
 	        		if(counter < 20){
 	        			if(result.geo){
 	        				counter++;
@@ -98,11 +66,77 @@ $(function(){
 						console.log(feeds)
 	       				showMarkers()
 						$('#loading-modal').modal('hide')
-					})
+	        	})
+
+	        	},
+	    		error: function(err){
+					$('#loading-modal').modal('hide')
+	    			console.log(err)
+	    		}
+	   //  		}).then(function(){
+				// $.ajax({
+				// 	url:'/search/insta/',
+	   //         		type:'post',
+	   //          	data:{form_data:form_data},
+	   //          	success: function(data){
+	   //          	counter = 0
+				// 	$.each(data, function(i, result){
+				// 	feeds.push({
+				// 		src: 'instagram',
+				// 		feed: result.caption,
+				// 		epoch: result.date*1000,
+				// 		geo: result.geo,
+				// 		date: new Date(result.date*1000),
+				// 		image: result.thumbnail_src
+				// 		})
+		  //       	})
+				// 	showMarkers()
+		  //   		},
+		  //   		error: function(err){
+				// 		$('#loading-modal').modal('hide')
+		  //   			console.log(err)
+		   //  		.then(function(){
+					// 	counter = 0
+					// 	feeds.sort(function(a, b) {
+					// 	return parseFloat(b.epoch) - parseFloat(a.epoch);
+					// })
+					// $.each(feeds, function(i, result){
+	    //     		if(counter < 20){
+	    //     			if(result.geo){
+	    //     				counter++;
+	    //     				var latlng = new google.maps.LatLng(result.geo.coordinates[0],result.geo.coordinates[1])
+	        			
+	    //     				var marker = new google.maps.Marker({
+					// 	    position: latlng,
+					// 	    title: "News Feed",
+					// 	    maxWidth: 100
+					// 	})
+						
+					// 	var infowindow = new google.maps.InfoWindow({
+					// 		content: contentString(result.feed)
+					// 	})
+
+					// 	marker.addListener('click', function() {	
+					// 		closeAllInfoWindows()						
+					// 		infowindow.open(mapRef, marker)
+					// 	})
+
+					// 	infoWindows.push(infowindow)
+
+					// 	markers.push(marker)
+	    //     			}
+	    //     		}
+	    //     			$('.feed-container').append(feedPrototype(result))
+	    //     		})
+
+					// 	console.log(feeds)
+	    //    				showMarkers()
+					// 	$('#loading-modal').modal('hide')
+					 })
 				})
 			})
-	    })
-	})    		
+	 
+	    		
 
 
 function closeAllInfoWindows(){
