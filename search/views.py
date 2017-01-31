@@ -1,70 +1,56 @@
 from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponse,JsonResponse
 from twython import Twython
+from django.views.decorators.csrf import csrf_exempt
 import re
+import json
+import oauth2 as oauth
+import json, random, sys, inspect
 # Create your views here.
 
-APP_KEY = 'UWzzBDpA76mQY50HCiOWmTLSm'
-APP_SECRET = 'PPvduM97NnTkDtU8lhxPPgUYObGndugI13OPGeSxauVoE3T3H4'
-ACCESS_TOKEN = 'AAAAAAAAAAAAAAAAAAAAAOJbXgAAAAAAhtiDPbKZDp0KxUkNcuCUhbDmYSQ%3DXz6kXTSB4hyQ7gshVqqKuRZXDz0DyIVr43SiKiu0q5nXrHFml2'
+# APP_KEY = 'UWzzBDpA76mQY50HCiOWmTLSm'
+# APP_SECRET = 'PPvduM97NnTkDtU8lhxPPgUYObGndugI13OPGeSxauVoE3T3H4'
+# ACCESS_TOKEN = 'AAAAAAAAAAAAAAAAAAAAAOJbXgAAAAAAhtiDPbKZDp0KxUkNcuCUhbDmYSQ%3DXz6kXTSB4hyQ7gshVqqKuRZXDz0DyIVr43SiKiu0q5nXrHFml2'
 
+
+def get_authenticated_client():
+    consumer_key = "UWzzBDpA76mQY50HCiOWmTLSm"
+    consumer_secret = "PPvduM97NnTkDtU8lhxPPgUYObGndugI13OPGeSxauVoE3T3H4"
+    consumer = oauth.Consumer(key=consumer_key, secret=consumer_secret)
+    request_token_url = "https://api.twitter.com/oauth/request_token"
+    client = oauth.Client(consumer)
+    return client
 
 def index(request):
-    return render(request, 'search/search.html')
+    return render(request, 'search.html')
 
-def keyword_search(request):
-    if request.method == 'GET' and 'q' in request.GET:
-        query = request.GET['q']
-        if query is not None and query != '':
-            twitter = Twython()
-            twitter = Twython(APP_KEY, access_token=ACCESS_TOKEN)
+@csrf_exempt  
+def search_tweets(request):
+    print 'inside predicting tag'
+    form_data=request.POST.get('form_data','')
+    print form_data
+    form_data=json.loads(form_data)
+    print form_data
+    tweets_list=[]
+    for i in range(len(form_data)):
+        current_dict=form_data[i]
 
-            search_results = []
-            MAX_ATTEMPTS = 100
-            TWEETS = 1000
+        if current_dict['name']=='input-search':
+            search_list=current_dict['value'].split(',')
+            # for debugging
+            print search_list
+            search_url = 'https://api.twitter.com/1.1/search/tweets.json?q=' + search_list[0]
+            client = get_authenticated_client()
+            response, data = client.request(search_url)
+            tweets = json.loads(data)
+            result = random.choice(tweets['statuses'])
+            tweets_list.append(result)
+    return JsonResponse(tweets_list,safe=False)
 
-            for i in range(0,MAX_ATTEMPTS):
+@csrf_exempt   
+def search_insta(request):
+    pass
 
-                if (TWEETS < len(search_results)):
-                    break
 
-                if (0 == i):
-                    results = twitter.search(q=query, count=100, result_type='mixed')
-                else:
-                    results = twitter.search(q=query, include_entities='true', max_id=next_max_id, count=100,  result_type='mixed')
-
-                # raise Exception(results)
-
-                for result in results['statuses']:
-                    search_results.append(result)
-                try:
-
-                    next_results_url_params = results['search_metadata']['next_results']
-                    next_max_id = next_results_url_params.split('max_id=')[1].split('&')[0]
-                except:
-                    break
-
-            b=[]
-            
-            # for tweet in search_results:
-            #     source = tweet.get('_source')
-            #     a={}
-            #     a['lat'] = source.get('location').get('lat')
-            #     a['lon'] = source.get('location').get('lon')
-            #     a['title'] = re.escape(source.get('title')) 
-            #     b.append(a)    
-
-            #search_results = twitter.search(q=query, count=100)
-            context = {
-                'search_results': search_results,'query':query
-            }
-
-            return render(request, 'search/search_results.html', context)
-        else:
-            context = {
-                'error': 'You need to enter a search term.',
-            }
-
-            return render(request, 'search/search.html', context)
 
 
