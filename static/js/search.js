@@ -2,6 +2,7 @@ var google_map
 var markers = []
 var news_feeds = []
 var feeds = []
+	
 
 $(function(){
 	$('.refresh').hide()
@@ -18,11 +19,11 @@ $(function(){
 		$('#loading-modal').modal('show')
 		$('.feed-container').empty()
 		$.ajax({
-	           	url:'/search/tweets/',
-	           	type:'post',
-	            data:{form_data:form_data},
-	            success: function(data){
-	            	$.each(data, function(i, result){	
+	        url:'/search/tweets/',
+	        type:'post',
+	        data:{form_data:form_data},
+	        success: function(data){
+	          	$.each(data, function(i, result){	
 					news_feeds.push({
 					src: 'twitter',
 					feed: result.text,
@@ -31,15 +32,45 @@ $(function(){
 					date: new Date(result.date),
 					image: result.image
 					})
-
-					$.each(news_feeds, function(i, result){
-					var counter = 0	
-	        		if(counter < 20){
-	        			if(result.geo){
-	        				counter++;
-	        				var latlng = new google.maps.LatLng(result.geo.coordinates[0],result.geo.coordinates[1])
+				})	
+			},
+	    	error: function(err){
+				$('#loading-modal').modal('hide')
+	    		console.log(err)
+	    	}
+	    })
+	    .then(function(){
+			$.ajax({
+			url: "/search/insta/",
+			type:'post',
+	        data:{form_data:form_data},
+	        success: function(instas){
+				counter = 0
+				$.each(instas, function(i, result){
+				feeds.push({
+					src: 'instagram',
+					feed: result.caption,
+					epoch: result.date*1000,
+					geo: result.geo,
+					date: new Date(result.date*1000),
+					image: result.thumbnail_src
+					})
+			    })
+				showMarkers()
+			},
+			error: function(err){
+				$('#loading-modal').modal('hide')
+			    console.log(err)
+			}
+		}).then(function(){
+			$.each(news_feeds, function(i, result){
+				var counter = 0	
+	        	if(counter < 20){
+	        		if(result.geo){
+	        			counter++;
+	        			var latlng = new google.maps.LatLng(result.geo.coordinates[0],result.geo.coordinates[1])
 	        			
-	        				var marker = new google.maps.Marker({
+	        			var marker = new google.maps.Marker({
 						    position: latlng,
 						    title: "News Feed",
 						    maxWidth: 100
@@ -57,24 +88,20 @@ $(function(){
 						feeds.push(feeds)
 
 						markers.push(marker)
-	        			}
+						alert(markers)
 	        		}
-	        			$('.feed-container').append(newsfeed(result))
-	        		})
+	        	}
+	        	$('.feed-container').append(newsfeed(result))
+	        })
 
-						console.log(news_feeds)
-	       				showMarkers()
-						$('#loading-modal').modal('hide')
-	        	})
-
-	        	},
-	    		error: function(err){
-					$('#loading-modal').modal('hide')
-	    			console.log(err)
-	    		}
-					 })
-				})
-			})
+		})
+			console.log(news_feeds)
+			showMarkers()
+			$('#loading-modal').modal('hide')
+	})
+	})
+})
+	
 	 
 	    		
 
@@ -118,6 +145,8 @@ function initMap() {
 	google_map = map
 }
 
+	
+
 
 
 function newsfeed(feed){
@@ -142,9 +171,8 @@ function newsfeed(feed){
 		+ '</div>'
 
 	return res
-	}	
+	}
 
-		            	
 
 	                    
 	 
