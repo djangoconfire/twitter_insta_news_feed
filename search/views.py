@@ -7,6 +7,8 @@ import json
 import json, random, sys, inspect
 from util import *
 
+
+
 def index(request):
     return render(request, 'search.html')
 
@@ -27,10 +29,13 @@ def search_tweets(request):
             print search_list
             search_url = 'https://api.twitter.com/1.1/search/tweets.json?q=' + search_list[0]
             client = get_authenticated_client()
-            response, data = client.request(search_url)
-            tweets = json.loads(data)
-            result = random.choice(tweets['statuses'])
-            tweets_list.append(result)
+            count=0
+            while count<10:
+                response, data = client.request(search_url)
+                tweets = json.loads(data)
+                result = random.choice(tweets['statuses'])
+                tweets_list.append(result)
+                count = count+1
     return JsonResponse(tweets_list,safe=False)
 
  

@@ -7,7 +7,6 @@ $(function(){
 	$('.refresh').hide()
 	$('#search-form').submit(function(event){
 		event.preventDefault();
-		deleteMarkers()
 		$('.refresh').show()
 		// location.reload()
 		var form_data=$(this).serializeArray();
